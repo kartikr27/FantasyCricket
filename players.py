@@ -1,20 +1,10 @@
-from pickletools import float8
-from re import match
-from tokenize import Double
+
 import requests
 #series id: 1075 
 #add captain 2x , vice cap 1.5x and inc annnounced lineups +4
 
 
-
-
-
-
-def get_player_points(match_id):
-	batsmen1={}
-	batsmen2={}
-	bowlers1={}
-	bowlers2={}
+def get_match_data(match_id):
 	url = "https://cricket-live-data.p.rapidapi.com/match/"+match_id
 
 	headers = {
@@ -22,7 +12,16 @@ def get_player_points(match_id):
 		"X-RapidAPI-Host": "cricket-live-data.p.rapidapi.com"
 	}
 
-	data = requests.request("GET", url, headers=headers).json()
+	match_data = requests.request("GET", url, headers=headers).json()
+	return match_data
+
+def get_player_points(match_id):
+	batsmen1={}
+	batsmen2={}
+	bowlers1={}
+	bowlers2={}
+	
+	data = get_match_data(match_id)
 
 	try:
 		for player in data['results']['live_details']['scorecard'][0]['batting']:
@@ -194,7 +193,7 @@ def get_player_points(match_id):
 			bowlers2[name]=bowlerpoints
 	except:
 		print("heheheh SIUUUU 4")
-	return batsmen1,batsmen2,bowlers1, bowlers2
+	return batsmen1,batsmen2,bowlers1,bowlers2
 #gets players in squad
 # for thing in data['results']['live_details']['teamsheets']['home']:
 # 	print(thing) 
